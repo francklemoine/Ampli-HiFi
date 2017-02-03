@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/u01/datas/perso/kicad/ampli_hifi/onoff_ampli_board/onoff_ampli_board.sch</source>
+    <date>dim. 22 janv. 2017 22:27:50 CET</date>
+    <tool>Eeschema 4.0.4+e1-6308~48~ubuntu15.10.1-stable</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>Préamplificateur / Amplificateur HiFi</title>
+        <company>Franck LEMOINE</company>
+        <rev>1.0</rev>
+        <date>05 mars 2014</date>
+        <source>onoff_ampli_board.sch</source>
+        <comment number="1" value="On/Off Ampli"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="D102">
+      <value>1N4004</value>
+      <footprint>Diodes_ThroughHole:Diode_DO-41_SOD81_Horizontal_RM10</footprint>
+      <libsource lib="onoff_ampli_board-cache" part="DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>53177E15</tstamp>
+    </comp>
+    <comp ref="K102">
+      <value>Finder 40.31</value>
+      <footprint>Franck_footprint:Relais_40.31_Finder</footprint>
+      <libsource lib="onoff_ampli_board-cache" part="REL-SPDT"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>53178D6E</tstamp>
+    </comp>
+    <comp ref="K101">
+      <value>Finder 40.31</value>
+      <footprint>Franck_footprint:Relais_40.31_Finder</footprint>
+      <libsource lib="onoff_ampli_board-cache" part="REL-SPDT"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>53182CBD</tstamp>
+    </comp>
+    <comp ref="D101">
+      <value>1N4004</value>
+      <footprint>Diodes_ThroughHole:Diode_DO-41_SOD81_Horizontal_RM10</footprint>
+      <libsource lib="onoff_ampli_board-cache" part="DIODE"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>53182CC8</tstamp>
+    </comp>
+    <comp ref="P104">
+      <value>CONN_2</value>
+      <footprint>Pin_Headers:Pin_Header_Straight_1x02</footprint>
+      <libsource lib="onoff_ampli_board-cache" part="CONN_2"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>54D51280</tstamp>
+    </comp>
+    <comp ref="P101">
+      <value>CONN_2</value>
+      <footprint>Pin_Headers:Pin_Header_Straight_1x02</footprint>
+      <libsource lib="onoff_ampli_board-cache" part="CONN_2"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>54DBD0B7</tstamp>
+    </comp>
+    <comp ref="P102">
+      <value>CONN_2</value>
+      <footprint>Franck_footprint:CONN_AK350_02_7.62</footprint>
+      <libsource lib="onoff_ampli_board-cache" part="CONN_2"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>54DF41B4</tstamp>
+    </comp>
+    <comp ref="P103">
+      <value>CONN_2</value>
+      <footprint>Franck_footprint:CONN_AK350_02_7.62</footprint>
+      <libsource lib="onoff_ampli_board-cache" part="CONN_2"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>54DF41F7</tstamp>
+    </comp>
+    <comp ref="RV101">
+      <value>4.7K</value>
+      <libsource lib="device" part="POT"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>588526D4</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="onoff_ampli_board-cache" part="CONN_2">
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_2</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="PM" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="onoff_ampli_board-cache" part="DIODE">
+      <footprints>
+        <fp>D?</fp>
+        <fp>S*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">DIODE</field>
+      </fields>
+      <pins>
+        <pin num="1" name="A" type="passive"/>
+        <pin num="2" name="K" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="POT">
+      <description>Potentionmetre</description>
+      <fields>
+        <field name="Reference">RV</field>
+        <field name="Value">POT</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="onoff_ampli_board-cache" part="REL-SPDT">
+      <footprints>
+        <fp>relay-*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">K</field>
+        <field name="Value">REL-SPDT</field>
+      </fields>
+      <pins>
+        <pin num="11" name="~" type="passive"/>
+        <pin num="12" name="~" type="passive"/>
+        <pin num="14" name="~" type="passive"/>
+        <pin num="A1" name="~" type="passive"/>
+        <pin num="A2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="device">
+      <uri>/usr/share/kicad/library/device.lib</uri>
+    </library>
+    <library logical="onoff_ampli_board-cache">
+      <uri>/u01/datas/perso/kicad/ampli_hifi/onoff_ampli_board/onoff_ampli_board-cache.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="+5V">
+      <node ref="P104" pin="1"/>
+      <node ref="P101" pin="1"/>
+      <node ref="D101" pin="2"/>
+      <node ref="D102" pin="2"/>
+      <node ref="K102" pin="A1"/>
+      <node ref="K101" pin="A1"/>
+    </net>
+    <net code="2" name="/N.LED_K">
+      <node ref="RV101" pin="2"/>
+      <node ref="RV101" pin="3"/>
+      <node ref="P104" pin="2"/>
+    </net>
+    <net code="3" name="/N.IN">
+      <node ref="K102" pin="11"/>
+      <node ref="P102" pin="2"/>
+    </net>
+    <net code="4" name="/N.OUT">
+      <node ref="P103" pin="2"/>
+      <node ref="K102" pin="14"/>
+    </net>
+    <net code="5" name="/P.IN">
+      <node ref="P102" pin="1"/>
+      <node ref="K101" pin="11"/>
+    </net>
+    <net code="6" name="/P.OUT">
+      <node ref="P103" pin="1"/>
+      <node ref="K101" pin="14"/>
+    </net>
+    <net code="7" name="Net-(K101-Pad12)">
+      <node ref="K101" pin="12"/>
+    </net>
+    <net code="8" name="Net-(K102-Pad12)">
+      <node ref="K102" pin="12"/>
+    </net>
+    <net code="9" name="/K">
+      <node ref="D102" pin="1"/>
+      <node ref="K102" pin="A2"/>
+      <node ref="P101" pin="2"/>
+      <node ref="K101" pin="A2"/>
+      <node ref="RV101" pin="1"/>
+      <node ref="D101" pin="1"/>
+    </net>
+  </nets>
+</export>

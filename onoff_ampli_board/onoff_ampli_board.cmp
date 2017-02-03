@@ -1,0 +1,45 @@
+Cmp-Mod V01 Created by CvPcb (2014-02-19 BZR 4706)-product date = sam. 15 mars 2014 09:28:59 CET
+
+BeginCmp
+TimeStamp = /53182CC8;
+Reference = D801;
+ValeurCmp = 1N4148;
+IdModule  = Discret:D3;
+EndCmp
+
+BeginCmp
+TimeStamp = /53177E15;
+Reference = D802;
+ValeurCmp = 1N4148;
+IdModule  = Discret:D3;
+EndCmp
+
+BeginCmp
+TimeStamp = /53182CBD;
+Reference = K801;
+ValeurCmp = Finder 40.31;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /53178D6E;
+Reference = K802;
+ValeurCmp = Finder 40.31;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /531EE7F8;
+Reference = P801;
+ValeurCmp = CONN_4;
+IdModule  = Connect:SIL-4;
+EndCmp
+
+BeginCmp
+TimeStamp = /5318434B;
+Reference = P802;
+ValeurCmp = CONN_4;
+IdModule  = ;
+EndCmp
+
+EndListe
