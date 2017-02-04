@@ -13,6 +13,7 @@ LIBS:memory
 LIBS:xilinx
 LIBS:microcontrollers
 LIBS:dsp
+LIBS:microchip
 LIBS:analog_switches
 LIBS:motorola
 LIBS:texas
@@ -28,6 +29,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:flem
 LIBS:onoff_ampli_board-cache
 EELAYER 25 0
 EELAYER END
@@ -35,10 +37,10 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Préamplificateur / Amplificateur HiFi"
-Date "05 mars 2014"
+Date "2017-01-18"
 Rev "1.0"
 Comp "Franck LEMOINE"
-Comment1 "On/Off Ampli"
+Comment1 "Carte On/Off Ampli"
 Comment2 ""
 Comment3 ""
 Comment4 ""
@@ -248,12 +250,12 @@ $Comp
 L POT RV101
 U 1 1 588526D4
 P 5700 5600
-F 0 "RV101" V 5850 5450 50  0000 C CNN
-F 1 "4.7K" V 5700 5450 50  0000 C CNN
+F 0 "RV101" H 5550 5450 50  0000 C CNN
+F 1 "4.7K" H 5550 5600 50  0000 C CNN
 F 2 "Potentiometers:Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp" H 5700 5600 50  0001 C CNN
 F 3 "" H 5700 5600 50  0000 C CNN
 	1    5700 5600
-	0    -1   -1   0   
+	-1   0    0    1   
 $EndComp
 Wire Wire Line
 	5500 5300 5500 5600

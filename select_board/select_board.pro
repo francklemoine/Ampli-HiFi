@@ -42,7 +42,7 @@ LabSize=60
 version=1
 LibDir=../../library/kicad-library/library;../../library/flem/KiCad/library
 [eeschema/libraries]
-LibName1=sound_board-rescue
+LibName1=select_board-rescue
 LibName2=power
 LibName3=device
 LibName4=transistors

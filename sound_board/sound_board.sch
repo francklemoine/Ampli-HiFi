@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:sound_board-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -28,11 +29,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:40xx
-LIBS:74xx-eu
-LIBS:uln-udn
-LIBS:ok-relay
-LIBS:franck
+LIBS:flem
 LIBS:sound_board-cache
 EELAYER 25 0
 EELAYER END
@@ -40,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Préamplificateur / Amplificateur HiFi"
-Date "05 mars 2014"
+Date "2017-01-18"
 Rev "1.0"
 Comp "Franck LEMOINE"
 Comment1 "Carte correcteur de balance/volume"

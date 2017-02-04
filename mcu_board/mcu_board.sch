@@ -29,11 +29,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:40xx
-LIBS:74xx-eu
-LIBS:uln-udn
-LIBS:ok-relay
-LIBS:franck
+LIBS:flem
 LIBS:mcu_board-cache
 EELAYER 25 0
 EELAYER END
@@ -44,7 +40,7 @@ Title "Préamplificateur / Amplificateur HiFi"
 Date "2017-01-18"
 Rev "1.0"
 Comp "Franck LEMOINE"
-Comment1 ""
+Comment1 "Carte mcu atmega"
 Comment2 ""
 Comment3 ""
 Comment4 ""

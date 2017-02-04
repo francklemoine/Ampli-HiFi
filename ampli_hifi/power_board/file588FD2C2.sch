@@ -28,7 +28,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:franck
+LIBS:flem
 LIBS:ampli_hifi-cache
 EELAYER 25 0
 EELAYER END
