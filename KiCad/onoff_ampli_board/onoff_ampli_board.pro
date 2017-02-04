@@ -40,7 +40,7 @@ SpiceUseNetNumbers=0
 LabSize=60
 [eeschema]
 version=1
-LibDir=../../library/kicad-library/library;../../library/flem/KiCad/library
+LibDir=../../../library/kicad-library/library;../../../library/flem/KiCad/library
 [eeschema/libraries]
 LibName1=onoff_ampli_board-rescue
 LibName2=power
