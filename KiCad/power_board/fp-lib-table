@@ -1,3 +1,3 @@
 (fp_lib_table
-  (lib (name flem)(type Github)(uri https://github.com/francklemoine/KiCad)(options "")(descr ""))
+  (lib (name flem)(type KiCad)(uri /u01/datas/perso/kicad/library/flem/KiCad/modules/flemPrints.pretty)(options "")(descr ""))
 )

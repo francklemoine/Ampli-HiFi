@@ -1,7 +1,7 @@
 (export (version D)
   (design
-    (source /u01/datas/perso/kicad/Ampli-HiFi/select_board/select_board.sch)
-    (date "sam. 04 févr. 2017 12:18:43 CET")
+    (source /u01/datas/perso/kicad/Ampli-HiFi/KiCad/select_board/select_board.sch)
+    (date "mar. 07 févr. 2017 18:05:28 CET")
     (tool "Eeschema 4.0.4+e1-6308~48~ubuntu15.10.1-stable")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -459,12 +459,12 @@
         (pin (num 9) (name O) (type passive))
         (pin (num 10) (name -) (type passive)))))
   (libraries
-    (library (logical device)
-      (uri /u01/datas/perso/kicad/library/kicad-library/library/device.lib))
+    (library (logical flem)
+      (uri /u01/datas/perso/kicad/library/flem/KiCad/library/flem.lib))
     (library (logical conn)
       (uri /u01/datas/perso/kicad/library/kicad-library/library/conn.lib))
-    (library (logical flem)
-      (uri /u01/datas/perso/kicad/library/flem/KiCad/library/flem.lib)))
+    (library (logical device)
+      (uri /u01/datas/perso/kicad/library/kicad-library/library/device.lib)))
   (nets
     (net (code 1) (name /HP_Phone)
       (node (ref K101) (pin 10))
