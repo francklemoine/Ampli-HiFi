@@ -1,0 +1,53 @@
+(export (version D)
+  (design
+    (source /u01/datas/perso/kicad/Ampli-HiFi/KiCad/connect_preampli2ampli_board/connect_preampli2ampli_board.sch)
+    (date "jeu. 16 févr. 2017 13:59:07 CET")
+    (tool "Eeschema 4.0.4+e1-6308~48~ubuntu15.10.1-stable")
+    (sheet (number 1) (name /) (tstamps /)
+      (title_block
+        (title "Préamplificateur / Amplificateur HiFi")
+        (company "Franck LEMOINE")
+        (rev 1.0)
+        (date 2017-02-16)
+        (source connect_preampli2ampli_board.sch)
+        (comment (number 1) (value "Carte de connexion à l'amplicateur (commande ON/OFF)"))
+        (comment (number 2) (value ""))
+        (comment (number 3) (value ""))
+        (comment (number 4) (value "")))))
+  (components
+    (comp (ref P101)
+      (value CONN_01X02)
+      (footprint Measurement_Points:Test_Point_2Pads)
+      (libsource (lib conn) (part CONN_01X02))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 58A58284))
+    (comp (ref P102)
+      (value CONN_01X02)
+      (footprint Measurement_Points:Test_Point_2Pads)
+      (libsource (lib conn) (part CONN_01X02))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 58A5829B)))
+  (libparts
+    (libpart (lib conn) (part CONN_01X02)
+      (description "Connector 01x02")
+      (footprints
+        (fp Pin_Header_Straight_1X02)
+        (fp Pin_Header_Angled_1X02)
+        (fp Socket_Strip_Straight_1X02)
+        (fp Socket_Strip_Angled_1X02))
+      (fields
+        (field (name Reference) P)
+        (field (name Value) CONN_01X02))
+      (pins
+        (pin (num 1) (name P1) (type passive))
+        (pin (num 2) (name P2) (type passive)))))
+  (libraries
+    (library (logical conn)
+      (uri /usr/share/kicad/library/conn.lib)))
+  (nets
+    (net (code 1) (name +5V)
+      (node (ref P102) (pin 1))
+      (node (ref P101) (pin 1)))
+    (net (code 2) (name /K-AlimAmpli)
+      (node (ref P102) (pin 2))
+      (node (ref P101) (pin 2)))))
