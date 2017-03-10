@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:ampli_hifi-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -34,7 +35,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 1 6
+Sheet 1 7
 Title "Préamplificateur HiFi"
 Date "2017-01-14"
 Rev "1.0"
@@ -568,24 +569,13 @@ F 3 "" H 4750 5400 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	4100 5400 4550 5400
+	4100 5400 4600 5400
 Wire Wire Line
-	4950 5400 4950 5400
+	4900 5400 4950 5400
 Wire Wire Line
 	4950 5400 4950 5500
 Wire Wire Line
 	4950 5500 4100 5500
-$Comp
-L APA-106 U?
-U 1 1 58886548
-P 4900 5950
-F 0 "U?" H 4700 6250 60  0000 C CNN
-F 1 "APA-106" H 4900 5650 60  0000 C CNN
-F 2 "" H 4900 5500 60  0000 C CNN
-F 3 "" H 4900 5500 60  0000 C CNN
-	1    4900 5950
-	1    0    0    -1  
-$EndComp
 $Comp
 L +5P #PWR?
 U 1 1 5888BA9D
@@ -601,20 +591,6 @@ Wire Wire Line
 	1950 2550 1950 2650
 Wire Wire Line
 	1950 2650 2300 2650
-$Comp
-L GND #PWR?
-U 1 1 5888CEC9
-P 5400 6100
-F 0 "#PWR?" H 5400 5850 50  0001 C CNN
-F 1 "GND" H 5400 5950 50  0000 C CNN
-F 2 "" H 5400 6100 50  0000 C CNN
-F 3 "" H 5400 6100 50  0000 C CNN
-	1    5400 6100
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	5350 6100 5400 6100
-NoConn ~ 5350 5800
 $Sheet
 S 2300 6200 1800 2200
 U 588FD2C3

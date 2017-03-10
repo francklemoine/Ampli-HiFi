@@ -484,17 +484,17 @@ Text Label 4050 5900 2    60   ~ 0
 LED_GND
 Text Label 5950 2400 0    60   ~ 0
 LED_DIN
-Text Label 5800 900  0    60   ~ 0
+Text Label 5800 1000 0    60   ~ 0
 RESET
 $Comp
 L Jumper JP102
 U 1 1 588A850B
-P 5200 900
-F 0 "JP102" H 5200 1050 60  0000 C CNN
-F 1 "JUMPER" H 5200 820 40  0000 C CNN
-F 2 "Measurement_Points:Test_Point_2Pads" H 5200 900 60  0001 C CNN
-F 3 "" H 5200 900 60  0000 C CNN
-	1    5200 900 
+P 5200 1000
+F 0 "JP102" H 5200 1150 60  0000 C CNN
+F 1 "JUMPER" H 5200 920 40  0000 C CNN
+F 2 "Measurement_Points:Test_Point_2Pads" H 5200 1000 60  0001 C CNN
+F 3 "" H 5200 1000 60  0000 C CNN
+	1    5200 1000
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -810,8 +810,6 @@ Wire Wire Line
 	7550 3750 7550 3700
 Connection ~ 7550 3700
 Wire Wire Line
-	4100 900  4900 900 
-Wire Wire Line
 	4100 1100 4150 1100
 Wire Wire Line
 	4100 1200 4150 1200
@@ -883,7 +881,7 @@ Wire Wire Line
 Wire Wire Line
 	5750 2200 5950 2200
 Wire Wire Line
-	5500 900  5800 900 
+	5500 1000 5800 1000
 Connection ~ 2150 900 
 Wire Wire Line
 	1750 2150 1800 2150
@@ -1159,5 +1157,9 @@ Wire Wire Line
 Wire Wire Line
 	4050 7100 4150 7100
 Wire Wire Line
-	4100 1000 4150 1000
+	4100 1000 4900 1000
+Wire Wire Line
+	4100 900  4150 900 
+Text Notes 4850 800  0    60   ~ 0
+Futur use with OTA programming
 $EndSCHEMATC
