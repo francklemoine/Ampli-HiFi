@@ -46,8 +46,10 @@ void setup() {
 	DEBUG_SERIAL_INIT();
 	irrecv.enableIRIn(); // Start the receiver
 	menuInit();
-	//lcdInit();
-	//neopInit(); neopOff();
+
+	//lcdInit();   // A ne pas faire ici, l'écran lcd
+	//neopInit();  //   et la led neopixel ne sont pas
+	//neopOff();   //   encore alimentés
 }
 
 void loop() {
@@ -64,7 +66,7 @@ void loop() {
 	if (getLcdState() == LARGE && getPower() == ON && millis() - lastLargeLcdDisplay >= LARGE_LCD_DISPLAY_TIMEOUT)
 		displayBasicInfos();
 
-	if (audioDatas.lcdBackLightSaver == 0 && getPower() == ON && millis() - lastLcdDisplay >= LCD_DISPLAY_TIMEOUT)
+	if (getLcdLightStatus() == 1 && getPower() == ON && audioDatas.lcdBackLightSaver == 1 && millis() - lastLcdDisplay >= LCD_DISPLAY_TIMEOUT)
 		lcdLightOff();
 
 	if (irrecv.decode(&results)) {
@@ -179,7 +181,7 @@ void manageIr() {
 			if (getLcdState() == MENU) {
 				delay(60);
 			} else {
-				delay(30); // ne pas prendre en compte toutes les trames ir notamment avec les appuis long
+				delay(20); // ne pas prendre en compte toutes les trames ir notamment avec les appuis long
 			}
 			neopSetColor(audioDatas.neopxStatus);
 		}
@@ -270,7 +272,7 @@ void initPins() {
 
 void initI2c() {
 	Wire.begin(); // join i2c bus (address optional for master)
-	Wire.setClock(400000L);
+	//Wire.setClock(400000L);
 }
 
 // retrieve current power state
@@ -281,7 +283,7 @@ state_t getPower() {
 void setPowerOn() {
 	pwrState = ON;
 	digitalWrite(PREAMPLIFIER_K_PIN, HIGH); // Step01 : switching on the pre-amplifier (all the supply voltage)
-	delay(10);
+	delay(1);
 	initI2c();
 	lcdInit();                              // Step02 : initialize lcd device
 	restoreAudioDatas();                    // Step03 : get previous state (before switching off)
@@ -297,9 +299,9 @@ void setPowerOn() {
 
 void setPowerOff() {
 	pwrState = OFF;
-	digitalWrite(AMPLIFIER_K_PIN, LOW);     // Step1 : switching off the amplifier
-	neopSetColor(COLOR_OFF);                // Step2 : switch color off the neopixel led
-	lcdOff();                               // Step3 : switching off the display
-	saveAudioDatas();                       // Step4 : store current pre-amplifier states
-	digitalWrite(PREAMPLIFIER_K_PIN, LOW);  // Step5 : switching off the pre-amplifier (all the supply voltage)
+	digitalWrite(AMPLIFIER_K_PIN, LOW);     // Step01 : switching off the amplifier
+	neopSetColor(COLOR_OFF);                // Step02 : switch color off the neopixel led
+	lcdOff();                               // Step03 : switching off the display
+	saveAudioDatas();                       // Step04 : store current pre-amplifier states
+	digitalWrite(PREAMPLIFIER_K_PIN, LOW);  // Step05 : switching off the pre-amplifier (all the supply voltage)
 }

@@ -11,6 +11,7 @@ extern unsigned long lastLcdDisplay;
 extern unsigned long lastLargeLcdDisplay;
 
 dspfmt_t lcdState = BASIC;
+byte lcdLightStatus = 0;
 
 const char* LCD_AFF_SRC[8] = {
 	[S_UNDEF] = "     ",
@@ -68,32 +69,14 @@ const char *MI_BRIGHTM       = "Brightness-";
 const char *MI_COLOR_ON_R    = "Col.On R";
 const char *MI_COLOR_ON_G    = "Col.On G";
 const char *MI_COLOR_ON_B    = "Col.On B";
-//const char *MI_COLOR_ON_P_R  = "Col.ON(R+)";
-//const char *MI_COLOR_ON_M_R  = "Col.ON(R-)";
-//const char *MI_COLOR_ON_P_G  = "Col.ON(G+)";
-//const char *MI_COLOR_ON_M_G  = "Col.ON(G-)";
-//const char *MI_COLOR_ON_P_B  = "Col.ON(B+)";
-//const char *MI_COLOR_ON_M_B  = "Col.ON(B-)";
 
 const char *MI_COLOR_OFF_R    = "Col.Off R";
 const char *MI_COLOR_OFF_G    = "Col.Off G";
 const char *MI_COLOR_OFF_B    = "Col.Off B";
-//const char *MI_COLOR_OFF_P_R = "Col.OFF(R+)";
-//const char *MI_COLOR_OFF_M_R = "Col.OFF(R-)";
-//const char *MI_COLOR_OFF_P_G = "Col.OFF(G+)";
-//const char *MI_COLOR_OFF_M_G = "Col.OFF(G-)";
-//const char *MI_COLOR_OFF_P_B = "Col.OFF(B+)";
-//const char *MI_COLOR_OFF_M_B = "Col.OFF(B-)";
 
 const char *MI_COLOR_BLK_R    = "Col.Blk R";
 const char *MI_COLOR_BLK_G    = "Col.Blk G";
 const char *MI_COLOR_BLK_B    = "Col.Blk B";
-//const char *MI_COLOR_BLK_P_R = "Col.BLK(R+)";
-//const char *MI_COLOR_BLK_M_R = "Col.BLK(R-)";
-//const char *MI_COLOR_BLK_P_G = "Col.BLK(G+)";
-//const char *MI_COLOR_BLK_M_G = "Col.BLK(G-)";
-//const char *MI_COLOR_BLK_P_B = "Col.BLK(B+)";
-//const char *MI_COLOR_BLK_M_B = "Col.BLK(B-)";
 
 const char *MI_COLOR_RAZ     = "Col.RAZ";
 
@@ -111,27 +94,6 @@ Menu mu2(MU2_LED);
 
 MenuItem mu2_mi01(MI_BRIGHTP);
 MenuItem mu2_mi02(MI_BRIGHTM);
-
-//MenuItem mu2_mi03(MI_COLOR_ON_P_R);
-//MenuItem mu2_mi04(MI_COLOR_ON_M_R);
-//MenuItem mu2_mi05(MI_COLOR_ON_P_G);
-//MenuItem mu2_mi06(MI_COLOR_ON_M_G);
-//MenuItem mu2_mi07(MI_COLOR_ON_P_B);
-//MenuItem mu2_mi08(MI_COLOR_ON_M_B);
-
-//MenuItem mu2_mi09(MI_COLOR_OFF_P_R);
-//MenuItem mu2_mi10(MI_COLOR_OFF_M_R);
-//MenuItem mu2_mi11(MI_COLOR_OFF_P_G);
-//MenuItem mu2_mi12(MI_COLOR_OFF_M_G);
-//MenuItem mu2_mi13(MI_COLOR_OFF_P_B);
-//MenuItem mu2_mi14(MI_COLOR_OFF_M_B);
-
-//MenuItem mu2_mi15(MI_COLOR_BLK_P_R);
-//MenuItem mu2_mi16(MI_COLOR_BLK_M_R);
-//MenuItem mu2_mi17(MI_COLOR_BLK_P_G);
-//MenuItem mu2_mi18(MI_COLOR_BLK_M_G);
-//MenuItem mu2_mi19(MI_COLOR_BLK_P_B);
-//MenuItem mu2_mi20(MI_COLOR_BLK_M_B);
 
 MenuItem mu2_mi30(MI_COLOR_ON_R);
 MenuItem mu2_mi31(MI_COLOR_ON_G);
@@ -165,7 +127,7 @@ void lcdInit() {
 
 void lcdOn() {
 	displayBasicInfos();
-	lcd.setBacklight(1);
+	lcdLightOn();
 }
 
 void lcdOff() {
@@ -175,8 +137,19 @@ void lcdOff() {
 }
 
 void lcdLightOff() {
-	lcd.setBacklight(0);
+	lcdLightStatus = 0;
+	lcd.setBacklight(lcdLightStatus);
 }
+
+void lcdLightOn() {
+	lcdLightStatus = 1;
+	lcd.setBacklight(lcdLightStatus);
+}
+
+byte getLcdLightStatus() {
+	return lcdLightStatus;
+}
+
 
 void displayBasicInfos() {
 	setLcdState(BASIC);
@@ -285,7 +258,7 @@ dspfmt_t getLcdState() {
 void setLcdState(dspfmt_t format) {
 	lcdState = format;
 
-	lcd.setBacklight(1);       // allume l'écran pour une période déterminé fonction du timestamp qui suit
+	lcdLightOn(); // allume l'écran pour une période déterminé fonction du timestamp qui suit
 	lastLcdDisplay = millis(); // dernier timestamp d'accès (quel que soit le menu)
 
 	if (lcdState == LARGE) {
@@ -303,29 +276,6 @@ void menuInit() {
 
 	mu2.add_item(&mu2_mi01, &onMenuSetLedBrightness);
 	mu2.add_item(&mu2_mi02, &onMenuSetLedBrightness);
-
-	/*
-	mu2.add_item(&mu2_mi03, &onMenuSetLedColorOn);
-	mu2.add_item(&mu2_mi04, &onMenuSetLedColorOn);
-	mu2.add_item(&mu2_mi05, &onMenuSetLedColorOn);
-	mu2.add_item(&mu2_mi06, &onMenuSetLedColorOn);
-	mu2.add_item(&mu2_mi07, &onMenuSetLedColorOn);
-	mu2.add_item(&mu2_mi08, &onMenuSetLedColorOn);
-
-	mu2.add_item(&mu2_mi09, &onMenuSetLedColorOff);
-	mu2.add_item(&mu2_mi10, &onMenuSetLedColorOff);
-	mu2.add_item(&mu2_mi11, &onMenuSetLedColorOff);
-	mu2.add_item(&mu2_mi12, &onMenuSetLedColorOff);
-	mu2.add_item(&mu2_mi13, &onMenuSetLedColorOff);
-	mu2.add_item(&mu2_mi14, &onMenuSetLedColorOff);
-
-	mu2.add_item(&mu2_mi15, &onMenuSetLedColorBlink);
-	mu2.add_item(&mu2_mi16, &onMenuSetLedColorBlink);
-	mu2.add_item(&mu2_mi17, &onMenuSetLedColorBlink);
-	mu2.add_item(&mu2_mi18, &onMenuSetLedColorBlink);
-	mu2.add_item(&mu2_mi19, &onMenuSetLedColorBlink);
-	mu2.add_item(&mu2_mi20, &onMenuSetLedColorBlink);
-	*/
 
 	mu2.add_item(&mu2_mi30, &onMenuSetLedColorOn);
 	mu2.add_item(&mu2_mi31, &onMenuSetLedColorOn);
@@ -390,32 +340,14 @@ void menuLedStatusDependingOnContext(MenuSystem ms) {
 	audioDatas.neopxStatus = COLOR_ON;
 
 	if (strcmp(ms.get_current_menu()->get_name(), MU2_LED) == 0) {
-		/*if (strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_ON_P_R) == 0 || \
-			strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_ON_P_G) == 0 || \
-			strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_ON_P_B) == 0 || \
-			strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_ON_M_R) == 0 || \
-			strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_ON_M_G) == 0 || \
-			strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_ON_M_B) == 0) {*/
 		if (strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_ON_R) == 0 || \
 			strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_ON_G) == 0 || \
 			strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_ON_B) == 0) {
 			audioDatas.neopxStatus = COLOR_ON;
-		/*} else if (strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_OFF_P_R) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_OFF_P_G) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_OFF_P_B) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_OFF_M_R) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_OFF_M_G) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_OFF_M_B) == 0) {*/
 		} else if (strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_OFF_R) == 0 || \
 				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_OFF_G) == 0 || \
 				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_OFF_B) == 0) {
 			audioDatas.neopxStatus = COLOR_OFF;
-		/*} else if (strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_BLK_P_R) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_BLK_P_G) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_BLK_P_B) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_BLK_M_R) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_BLK_M_G) == 0 || \
-				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_BLK_M_B) == 0) {*/
 		} else if (strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_BLK_R) == 0 || \
 				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_BLK_G) == 0 || \
 				   strcmp(ms.get_current_menu()->get_selected()->get_name(), MI_COLOR_BLK_B) == 0) {
@@ -448,23 +380,14 @@ void displayMenu() {
 		sprintf(data, "%d", audioDatas.balanceStepDefault);*/
 	} else if (strcmp(itemName, MI_BRIGHTP) == 0 || strcmp(itemName, MI_BRIGHTM) == 0) {
 		sprintf(data, "%d", audioDatas.neopxBrightness);
-	/*} else if (strcmp(itemName, MI_COLOR_ON_P_R) == 0 || strcmp(itemName, MI_COLOR_ON_M_R) == 0 || \
-	           strcmp(itemName, MI_COLOR_ON_P_G) == 0 || strcmp(itemName, MI_COLOR_ON_M_G) == 0 || \
-	           strcmp(itemName, MI_COLOR_ON_P_B) == 0 || strcmp(itemName, MI_COLOR_ON_M_B) == 0) {*/
 	} else if (strcmp(itemName, MI_COLOR_ON_R) == 0 || strcmp(itemName, MI_COLOR_ON_G) == 0 || strcmp(itemName, MI_COLOR_ON_B) == 0) {
 		sprintf(data, "#%02X%02X%02X", R_COLOR(audioDatas.neopxOn), G_COLOR(audioDatas.neopxOn), B_COLOR(audioDatas.neopxOn));
-	/*} else if (strcmp(itemName, MI_COLOR_OFF_P_R) == 0 || strcmp(itemName, MI_COLOR_OFF_M_R) == 0 || \
-	           strcmp(itemName, MI_COLOR_OFF_P_G) == 0 || strcmp(itemName, MI_COLOR_OFF_M_G) == 0 || \
-	           strcmp(itemName, MI_COLOR_OFF_P_B) == 0 || strcmp(itemName, MI_COLOR_OFF_M_B) == 0) {*/
 	} else if (strcmp(itemName, MI_COLOR_OFF_R) == 0 || strcmp(itemName, MI_COLOR_OFF_G) == 0 || strcmp(itemName, MI_COLOR_OFF_B) == 0) {
 		sprintf(data, "#%02X%02X%02X", R_COLOR(audioDatas.neopxOff), G_COLOR(audioDatas.neopxOff), B_COLOR(audioDatas.neopxOff));
-	/*} else if (strcmp(itemName, MI_COLOR_BLK_P_R) == 0 || strcmp(itemName, MI_COLOR_BLK_M_R) == 0 || \
-	           strcmp(itemName, MI_COLOR_BLK_P_G) == 0 || strcmp(itemName, MI_COLOR_BLK_M_G) == 0 || \
-	           strcmp(itemName, MI_COLOR_BLK_P_B) == 0 || strcmp(itemName, MI_COLOR_BLK_M_B) == 0) {*/
 	} else if (strcmp(itemName, MI_COLOR_BLK_R) == 0 || strcmp(itemName, MI_COLOR_BLK_G) == 0 || strcmp(itemName, MI_COLOR_BLK_B) == 0) {
 		sprintf(data, "#%02X%02X%02X", R_COLOR(audioDatas.neopxBlink), G_COLOR(audioDatas.neopxBlink), B_COLOR(audioDatas.neopxBlink));
 	} else if (strcmp(itemName, MI_LCD_BL_SAVER) == 0) {
-		sprintf(data, "%s", (audioDatas.lcdBackLightSaver == 0) ? "On" : "Off");
+		sprintf(data, "%s", (audioDatas.lcdBackLightSaver == 1) ? "On" : "Off");
 	}
 	displayMenuData(data);
 	setLcdState(MENU);
@@ -526,19 +449,6 @@ void onMenuSetLedBrightness(MenuItem* pMenuItem) {
 
 void onMenuSetLedColorOn(MenuItem* pMenuItem) {
 	audioDatas.neopxOnDefault = 0;
-	/*if (strcmp(pMenuItem->get_name(), MI_COLOR_ON_M_R) == 0) {
-		audioDatas.neopxOn = decreaseColor(audioDatas.neopxOn, RED);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_ON_M_G) == 0) {
-		audioDatas.neopxOn = decreaseColor(audioDatas.neopxOn, GREEN);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_ON_M_B) == 0) {
-		audioDatas.neopxOn = decreaseColor(audioDatas.neopxOn, BLUE);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_ON_P_R) == 0) {
-		audioDatas.neopxOn = increaseColor(audioDatas.neopxOn, RED);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_ON_P_G) == 0) {
-		audioDatas.neopxOn = increaseColor(audioDatas.neopxOn, GREEN);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_ON_P_B) == 0) {
-		audioDatas.neopxOn = increaseColor(audioDatas.neopxOn, BLUE);
-	}*/
 	if (strcmp(pMenuItem->get_name(), MI_COLOR_ON_R) == 0) {
 		audioDatas.neopxOn = increaseColor(audioDatas.neopxOn, RED);
 	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_ON_G) == 0) {
@@ -552,19 +462,6 @@ void onMenuSetLedColorOn(MenuItem* pMenuItem) {
 
 void onMenuSetLedColorOff(MenuItem* pMenuItem) {
 	audioDatas.neopxOffDefault = 0;
-	/*if (strcmp(pMenuItem->get_name(), MI_COLOR_OFF_M_R) == 0) {
-		audioDatas.neopxOff = decreaseColor(audioDatas.neopxOff, RED);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_OFF_M_G) == 0) {
-		audioDatas.neopxOff = decreaseColor(audioDatas.neopxOff, GREEN);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_OFF_M_B) == 0) {
-		audioDatas.neopxOff = decreaseColor(audioDatas.neopxOff, BLUE);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_OFF_P_R) == 0) {
-		audioDatas.neopxOff = increaseColor(audioDatas.neopxOff, RED);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_OFF_P_G) == 0) {
-		audioDatas.neopxOff = increaseColor(audioDatas.neopxOff, GREEN);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_OFF_P_B) == 0) {
-		audioDatas.neopxOff = increaseColor(audioDatas.neopxOff, BLUE);
-	}*/
 	if (strcmp(pMenuItem->get_name(), MI_COLOR_OFF_R) == 0) {
 		audioDatas.neopxOff = increaseColor(audioDatas.neopxOff, RED);
 	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_OFF_G) == 0) {
@@ -578,19 +475,6 @@ void onMenuSetLedColorOff(MenuItem* pMenuItem) {
 
 void onMenuSetLedColorBlink(MenuItem* pMenuItem) {
 	audioDatas.neopxBlinkDefault = 0;
-	/*if (strcmp(pMenuItem->get_name(), MI_COLOR_BLK_M_R) == 0) {
-		audioDatas.neopxBlink = decreaseColor(audioDatas.neopxBlink, RED);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_BLK_M_G) == 0) {
-		audioDatas.neopxBlink = decreaseColor(audioDatas.neopxBlink, GREEN);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_BLK_M_B) == 0) {
-		audioDatas.neopxBlink = decreaseColor(audioDatas.neopxBlink, BLUE);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_BLK_P_R) == 0) {
-		audioDatas.neopxBlink = increaseColor(audioDatas.neopxBlink, RED);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_BLK_P_G) == 0) {
-		audioDatas.neopxBlink = increaseColor(audioDatas.neopxBlink, GREEN);
-	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_BLK_P_B) == 0) {
-		audioDatas.neopxBlink = increaseColor(audioDatas.neopxBlink, BLUE);
-	}*/
 	if (strcmp(pMenuItem->get_name(), MI_COLOR_BLK_R) == 0) {
 		audioDatas.neopxBlink = increaseColor(audioDatas.neopxBlink, RED);
 	} else if (strcmp(pMenuItem->get_name(), MI_COLOR_BLK_G) == 0) {

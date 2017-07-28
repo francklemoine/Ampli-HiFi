@@ -7,8 +7,6 @@ extern Adafruit_NeoPixel neopx;
 
 void neopInit() {
 	neopx.begin();
-	//neopx.setBrightness(NEOPIXEL_BRIGHTNESS);
-	//neopx.show(); // Initialize NeoPixel Led to 'off'
 	neopSetBrightness();
 }
 
@@ -97,7 +95,7 @@ byte increaseBaseColor(byte color) {
 	} else {
 		c = 0;
 	}*/
-	if (c == 0xFF){
+	if (c == 0xFF) {
 		c = 0;
 	} else if (c <= 0xE0) {
 		c += 0x10;
@@ -153,7 +151,7 @@ long decreaseColor(long color, basecolor_t rgb) {
 byte decreaseBaseColor(byte color) {
 	// 0x00, 0x10, ..., 0xD0, 0xE0, 0xF0, 0xFF
 	byte c = color;
-	if (c == 0){
+	if (c == 0) {
 		c = 0xFF;
 	} else if (c <= 0x20) {
 		c -= 0x10;
