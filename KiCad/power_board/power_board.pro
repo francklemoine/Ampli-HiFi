@@ -1,4 +1,4 @@
-update=ven. 03 févr. 2017 19:37:54 CET
+update=mer. 02 août 2017 11:19:15 CEST
 version=1
 last_client=kicad
 [general]
@@ -28,16 +28,6 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.2
 BoardOutlineThickness=0.15
 ModuleOutlineThickness=0.15
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=/tmp
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=Pcbnew
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60
 [eeschema]
 version=1
 LibDir=../../../library/kicad-library/library;../../../library/flem/KiCad/library
@@ -73,3 +63,13 @@ LibName28=atmel
 LibName29=contrib
 LibName30=valves
 LibName31=flem
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=/tmp
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=Pcbnew
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60
