@@ -63,10 +63,16 @@ void loop() {
 		DEBUG_PRINT("active");
 	}
 
-	if (getLcdState() == LARGE && getPower() == ON && millis() - lastLargeLcdDisplay >= LARGE_LCD_DISPLAY_TIMEOUT)
+	if (getLcdState() == LARGE && \
+		getPower() == ON && \
+		millis() - lastLargeLcdDisplay >= LARGE_LCD_DISPLAY_TIMEOUT)
 		displayBasicInfos();
 
-	if (getLcdLightStatus() == 1 && getPower() == ON && audioDatas.lcdBackLightSaver == 1 && millis() - lastLcdDisplay >= LCD_DISPLAY_TIMEOUT)
+	if (getLcdState() == BASIC && \
+		getLcdLightStatus() == 1 && \
+		getPower() == ON && \
+		audioDatas.lcdBackLightSaver == 1 && \
+		millis() - lastLcdDisplay >= LCD_DISPLAY_TIMEOUT)
 		lcdLightOff();
 
 	if (irrecv.decode(&results)) {
@@ -97,6 +103,14 @@ void hibernate() {
 	byte old_ADCSRA = ADCSRA;
 	// disable ADC to save power
 	ADCSRA = 0;
+
+//	power_twi_disable();
+//	// turn off I2C
+//	TWCR &= ~(bit(TWEN) | bit(TWIE) | bit(TWEA));
+//
+//	// turn off I2C pull-ups
+//	digitalWrite (A4, LOW); //SDA
+//	digitalWrite (A5, LOW); //SCL
 
 	power_all_disable(); // turn off various modules
 	interrupts();
@@ -179,9 +193,9 @@ void manageIr() {
 			}
 
 			if (getLcdState() == MENU) {
-				delay(60);
+				delay(50);
 			} else {
-				delay(20); // ne pas prendre en compte toutes les trames ir notamment avec les appuis long
+				delay(25); // ne pas prendre en compte toutes les trames ir notamment avec les appuis long
 			}
 			neopSetColor(audioDatas.neopxStatus);
 		}
@@ -265,6 +279,10 @@ void initPins() {
 	pinMode(CLOCK_595_PIN,      OUTPUT);
 	pinMode(DATAS_595_PIN,      OUTPUT);
 
+#ifdef USE_POTENTIOMETER_CE_PIN
+	pinMode(POT_CE_PIN,         OUTPUT);
+#endif
+
 	pinMode(NEOPIXEL_GND_PIN,   OUTPUT);
 	pinMode(AMPLIFIER_K_PIN,    OUTPUT);
 	pinMode(PREAMPLIFIER_K_PIN, OUTPUT);
@@ -273,6 +291,7 @@ void initPins() {
 void initI2c() {
 	Wire.begin(); // join i2c bus (address optional for master)
 	//Wire.setClock(400000L);
+	disableInternalPullupsOnSDAandSCL();
 }
 
 // retrieve current power state
@@ -283,16 +302,19 @@ state_t getPower() {
 void setPowerOn() {
 	pwrState = ON;
 	digitalWrite(PREAMPLIFIER_K_PIN, HIGH); // Step01 : switching on the pre-amplifier (all the supply voltage)
-	delay(1);
+	delay(4);
 	initI2c();
-	lcdInit();                              // Step02 : initialize lcd device
-	restoreAudioDatas();                    // Step03 : get previous state (before switching off)
-	setSource(getSource(), true);           // Step04 : set source channel
-	setVolume();                            // Step05 : set volume + balance
-	digitalWrite(AMPLIFIER_K_PIN, HIGH);    // Step06 : switching on the amplifier
+	delay(2);
+	restoreAudioDatas();                    // Step02 : get previous state (before switching off)
+	setSource(getSource(), true);           // Step03 : set source channel
+#ifdef DS1882
+	initConfRegister();
+#endif
+	setVolume();                            // Step04 : set volume + balance
+	digitalWrite(AMPLIFIER_K_PIN, HIGH);    // Step05 : switching on the amplifier
+	lcdInit();                              // Step06 : initialize lcd device
 	lcdOn();                                // Step07 : display standard informations
 	digitalWrite(NEOPIXEL_GND_PIN, HIGH);   // Step08 : connect LED K to GND
-	//delay(10);
 	neopInit();                             // Step09 : switch on the neopixel led
 	neopSetColor(audioDatas.neopxStatus);
 }
@@ -304,4 +326,23 @@ void setPowerOff() {
 	lcdOff();                               // Step03 : switching off the display
 	saveAudioDatas();                       // Step04 : store current pre-amplifier states
 	digitalWrite(PREAMPLIFIER_K_PIN, LOW);  // Step05 : switching off the pre-amplifier (all the supply voltage)
+	digitalWrite(LATCH_595_PIN, LOW);       // Step06 : to avoid having a resident voltage influencing the +5V
+	digitalWrite(CLOCK_595_PIN, LOW);       //           (remains a resident of light in the led)
+	digitalWrite(DATAS_595_PIN, LOW);
+	disableInternalPullupsOnSDAandSCL();
+}
+
+void disableInternalPullupsOnSDAandSCL() {
+	// comming from : http://www.varesano.net/blog/fabio/how-disable-internal-arduino-atmega-pullups-sda-and-scl-i2c-bus
+//#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega8__) || defined(__AVR_ATmega328P__)
+	// deactivate internal pull-ups for twi
+	// as per note from atmega8 manual pg167
+	cbi(PORTC, 4);
+	cbi(PORTC, 5);
+//#else
+	// deactivate internal pull-ups for twi
+	// as per note from atmega128 manual pg204
+//	cbi(PORTD, 0);
+//	cbi(PORTD, 1);
+//#endif
 }

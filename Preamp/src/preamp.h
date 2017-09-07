@@ -3,7 +3,14 @@
 
 #include "Arduino.h"
 
-//#define MYDEBUG   //enable/disable serial debug output
+//#define MYDEBUG                  //enable/disable serial debug output
+#define DS1882                   //use DS1808 or DS1882 digital potentiometer
+//#define USE_POTENTIOMETER_CE_PIN //use Chip Enable pin
+
+// used to disable the internal pullups
+#ifndef cbi
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#endif
 
 #ifdef MYDEBUG
 	#define DEBUG_SERIAL_INIT() Serial.begin(9600);
@@ -99,26 +106,40 @@ const int  LATCH_595_PIN         = A1; // Connected to ST_CP of 74HC595  -  ATME
 const int  CLOCK_595_PIN         = A2; // Connected to SH_CP of 74HC595  -  ATMEGA328-pin25 (PC2, PCINT10)
 const int  DATAS_595_PIN         = A0; // Connected to DS of 74HC595     -  ATMEGA328-pin23 (PC0, PCINT8)
 
+#ifdef USE_POTENTIOMETER_CE_PIN
+const byte POT_CE_PIN            = 5;  // Connected to CE of DS18xx Numeric Potentiometer  -  ATMEGA328-pin9 (PD5, PCINT21)
+#endif
+
+const byte VOL_ADDR_W            = B00101000; //B01010000 - need to shift right (cf. Wire Library)
+
 const byte VOL_STEP_DEFAULT_MIN  = 1;
 const byte VOL_STEP_DEFAULT      = 1;
 const byte VOL_STEP_DEFAULT_MAX  = 4;
 
-const byte VOL_TAP_MAX           = 33; // 33 (90dB) <= volume <= 0 (OdB)
-const byte VOL_TAP_STARTUP       = 25; // attenuation = 39db
-const byte VOL_ADDR_W            = B00101000; //B01010000 - need to shift right (cf. Wire Library)
-const byte BAR_ADDR_W            = B00111100; //B01111000
-const byte BAL_ADDR_W            = B00111101; //B01111000
-const byte BAL_TAP_MIDDLE        = 10; // potentiometer middle tap value
-const byte BAL_TAP_MAX           = 20;
 const byte BAL_STEP_DEFAULT_MIN  = 1;
 const byte BAL_STEP_DEFAULT      = 1;
 const byte BAL_STEP_DEFAULT_MAX  = 10;
 
-/*
-* Tableau associant la valeur du volume avec son attenuation en décibels
-* Ex : à un volume à 0 correspond une attenuation de 90db
-*/
-const byte vol2db[34] = {90, 60, 57, 54, 51, 48, 45, 42, 39, 36, 34, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+#ifdef DS1882
+	const byte VOL_TAP_POS       = 63; // 63 (90dB) <= volume <= 0 (OdB)
+	const byte VOL_TAP_STARTUP   = 39; // attenuation = 39db
+	const byte VOL_MAX           = 63;
+	const byte CONF_REGISTER     = B10000110; // DS1882 Configuration Register = volatile, zero crossing detection, 63 positions and mute
+#else // DS1808
+	const byte VOL_TAP_POS       = 33; // 33 (90dB) <= volume <= 0 (OdB)
+	const byte VOL_TAP_STARTUP   = 25; // attenuation = 39db
+	const byte VOL_MAX           = 33;
+	/*
+	* Tableau associant la valeur du volume avec son attenuation en décibels
+	* Ex : à un volume à 0 correspond une attenuation de 90db
+	*/
+	const byte vol2db[34] = {90, 60, 57, 54, 51, 48, 45, 42, 39, 36, 34, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+#endif
+
+const byte VOL_ATTN_MAX_DB       = 90; // attenuation max = 90db
+
+const byte BAL_TAP_MIDDLE        = 20; // potentiometer middle tap value
+const byte BAL_TAP_MAX           = 40;
 
 const int LCD_I2C_ADDR  = 0x3F;
 
@@ -211,17 +232,17 @@ const byte PREAMPLIFIER_K_PIN      = 2;   // ATMEGA328-pin32 (PD2, PCINT18)
 const byte NEOPIXEL_PIN            = 10;  // ATMEGA328-pin14 (PB2, PCINT2)
 const byte NEOPIXEL_GND_PIN        = 3;   // ATMEGA328-pin1  (PD3, PCINT19)
 const byte NEOPIXEL_NUM            = 1;   // only one led
-const byte NEOPIXEL_BRIGHTNESS     = 100;
+const byte NEOPIXEL_BRIGHTNESS     = 20;
 const byte NEOPIXEL_BRIGHTNESS_MAX = 250;
 const byte NEOPIXEL_BRIGHTNESS_MIN = 10;
 const byte NEOPIXEL_BRIGHTNESS_TAP = 10;
 const byte NEOPIXEL_ON_R           = 0;
 const byte NEOPIXEL_ON_G           = 0;
-const byte NEOPIXEL_ON_B           = 100;
-const byte NEOPIXEL_BLINK_R        = 100;
+const byte NEOPIXEL_ON_B           = 0x50;
+const byte NEOPIXEL_BLINK_R        = 0x10;
 const byte NEOPIXEL_BLINK_G        = 0;
 const byte NEOPIXEL_BLINK_B        = 0;
-const byte NEOPIXEL_OFF_R          = 100;
+const byte NEOPIXEL_OFF_R          = 0x30;
 const byte NEOPIXEL_OFF_G          = 0;
 const byte NEOPIXEL_OFF_B          = 0;
 

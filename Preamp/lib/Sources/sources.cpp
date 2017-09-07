@@ -20,7 +20,7 @@ void setSource(sources_t sx, boolean force) {
 	if (sx != getSource() || force) {
 		byte source;
 		clearSource();
-		delay(10);
+		delay(5);
 		if (sx == S1) {
 			source = audioDatas.source | B10000000;
 		} else if (sx == S2) {

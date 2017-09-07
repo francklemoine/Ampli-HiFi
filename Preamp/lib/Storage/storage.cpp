@@ -10,8 +10,8 @@ void restoreAudioDatas() {
 	EEPROM.get(ADDR_MEM_BASE, audioDatas);
 
 	// volume (volume max au démarrage)
-	if (audioDatas.volumeMaxStart > VOL_TAP_MAX) // Locations that have never been written to have the value of 255
-		audioDatas.volumeMaxStart = VOL_TAP_MAX - VOL_TAP_STARTUP;
+	if (audioDatas.volumeMaxStart > VOL_MAX) // Locations that have never been written to have the value of 255
+		audioDatas.volumeMaxStart = VOL_TAP_POS - VOL_TAP_STARTUP;
 
 	// volume (incrément par défaut)
 	/*if (audioDatas.volumeStepDefault >= VOL_STEP_DEFAULT_MAX) // Locations that have never been written to have the value of 255
@@ -22,7 +22,7 @@ void restoreAudioDatas() {
 		audioDatas.balanceStepDefault = BAL_STEP_DEFAULT;*/
 
 	// volume
-	if (audioDatas.volume > VOL_TAP_MAX) // Locations that have never been written to have the value of 255
+	if (audioDatas.volume > VOL_MAX) // Locations that have never been written to have the value of 255
 		audioDatas.volume = 0;
 	if (audioDatas.volume > audioDatas.volumeMaxStart)
 		audioDatas.volume = audioDatas.volumeMaxStart;

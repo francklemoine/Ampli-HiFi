@@ -121,8 +121,6 @@ void lcdInit() {
 	for (byte cnt = 0; cnt < sizeof(custChar) / 8; cnt++) {
 		lcd.createChar(cnt, custChar[cnt]);
 	}
-
-	lcdOff();
 }
 
 void lcdOn() {
@@ -401,7 +399,7 @@ void displayMenuData(char* myData) {
 }
 
 void onMenuSetVolMaxStart(MenuItem* pMenuItem) {
-	if (audioDatas.volumeMaxStart == VOL_TAP_MAX) {
+	if (audioDatas.volumeMaxStart == VOL_MAX) {
 		audioDatas.volumeMaxStart = 0;
 	} else {
 		audioDatas.volumeMaxStart++;

@@ -8,6 +8,7 @@ void audioInit();
 byte incVolume();
 byte decVolume();
 void setVolume();
+void initConfRegister();
 state_t getMute();
 void setMuteOn();
 void setMuteOff();
