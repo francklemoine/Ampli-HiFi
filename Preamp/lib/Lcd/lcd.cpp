@@ -14,14 +14,14 @@ dspfmt_t lcdState = BASIC;
 byte lcdLightStatus = 0;
 
 const char* LCD_AFF_SRC[8] = {
-	[S_UNDEF] = "     ",
-	[S1]      = "Cd   ",
-	[S2]      = "Pc   ",
-	[S3]      = "Tv   ",
-	[S4]      = "Dvd  ",
-	[S5]      = "Tuner",
-	[S6]      = "Aux1 ",
-	[S7]      = "Aux2 "
+	[S_UNDEF] = "      ",
+	[S1]      = "Cd    ",
+	[S2]      = "Dvd   ",
+	[S3]      = "Tuner ",
+	[S4]      = "Tape  ",
+	[S5]      = "Aux   ",
+	[S6]      = "ByPass",
+	[S7]      = "Aux2  "
 };
 
 // Define the bit patters for each of our custom chars. These
@@ -60,8 +60,6 @@ const char *MU2_LED          = "Led";
 const char *MU3_LCD          = "Lcd";
 
 const char *MI_VOLSMAX       = "V.Startup";
-//const char *MI_VOLSTEP       = "V.Step";
-//const char *MI_BALSTEP       = "B.Step";
 
 const char *MI_BRIGHTP       = "Brightness+";
 const char *MI_BRIGHTM       = "Brightness-";
@@ -87,8 +85,6 @@ Menu mm(MU_ROOT);
 
 Menu mu1(MU1_AUD);
 MenuItem mu1_mi1(MI_VOLSMAX);
-//MenuItem mu1_mi2(MI_VOLSTEP);
-//MenuItem mu1_mi3(MI_BALSTEP);
 
 Menu mu2(MU2_LED);
 
@@ -116,6 +112,7 @@ MenuItem mu3_mi01(MI_LCD_BL_SAVER);
 void lcdInit() {
 	Wire.beginTransmission(LCD_I2C_ADDR);
 	lcd.begin(16, 2); // initialize the lcd
+	lcdOn();
 
 	// Create custom character map (8 characters only!)
 	for (byte cnt = 0; cnt < sizeof(custChar) / 8; cnt++) {
@@ -224,8 +221,9 @@ slider_t getBalanceSlider() {
 void displaySource() {
 	switch(getLcdState()) {
 		case BASIC:
-			lcd.setCursor(11, 0);
+			lcd.setCursor(10, 0);
 			lcd.print(LCD_AFF_SRC[getSource()]);
+			setLcdState(BASIC); // switch on lcd
 			break;
 		case LARGE:
 			displayBasicInfos();
@@ -267,8 +265,6 @@ void setLcdState(dspfmt_t format) {
 void menuInit() {
 	mm.add_menu(&mu1);
 	mu1.add_item(&mu1_mi1, &onMenuSetVolMaxStart);
-	//mu1.add_item(&mu1_mi2, &onMenuSetVolIncr);
-	//mu1.add_item(&mu1_mi3, &onMenuSetBalIncr);
 
 	mm.add_menu(&mu2);
 
@@ -372,10 +368,6 @@ void displayMenu() {
 
 	if (strcmp(itemName, MI_VOLSMAX) == 0) {
 		sprintf(data, "%d", audioDatas.volumeMaxStart);
-	/*} else if (strcmp(itemName, MI_VOLSTEP) == 0) {
-		sprintf(data, "%d", audioDatas.volumeStepDefault);
-	} else if (strcmp(itemName, MI_BALSTEP) == 0) {
-		sprintf(data, "%d", audioDatas.balanceStepDefault);*/
 	} else if (strcmp(itemName, MI_BRIGHTP) == 0 || strcmp(itemName, MI_BRIGHTM) == 0) {
 		sprintf(data, "%d", audioDatas.neopxBrightness);
 	} else if (strcmp(itemName, MI_COLOR_ON_R) == 0 || strcmp(itemName, MI_COLOR_ON_G) == 0 || strcmp(itemName, MI_COLOR_ON_B) == 0) {
@@ -405,22 +397,6 @@ void onMenuSetVolMaxStart(MenuItem* pMenuItem) {
 		audioDatas.volumeMaxStart++;
 	}
 }
-
-/*void onMenuSetVolIncr(MenuItem* pMenuItem) {
-	if (audioDatas.volumeStepDefault == VOL_STEP_DEFAULT_MAX) {
-		audioDatas.volumeStepDefault = VOL_STEP_DEFAULT_MIN;
-	} else {
-		audioDatas.volumeStepDefault++;
-	}
-}
-
-void onMenuSetBalIncr(MenuItem* pMenuItem) {
-	if (audioDatas.balanceStepDefault == BAL_STEP_DEFAULT_MAX) {
-		audioDatas.balanceStepDefault = BAL_STEP_DEFAULT_MIN;
-	} else {
-		audioDatas.balanceStepDefault++;
-	}
-}*/
 
 void onMenuSetLedBrightness(MenuItem* pMenuItem) {
 	if (strcmp(pMenuItem->get_name(), MI_BRIGHTM) == 0) {

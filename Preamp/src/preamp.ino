@@ -1,9 +1,9 @@
 /*
-  Preamplifier HiFi - IR (rc5), I2C (lcd, volume, balance)
+  Preamplifier HiFi - IR (rc6), I2C (lcd, volume, balance)
 
   version   0.1
   created   15 Mar. 2017
-  modified  20 Jul. 2017
+  modified  27 Sep. 2017
   by Franck LEMOINE
 */
 #include "Arduino.h"
@@ -29,6 +29,7 @@ audioDatas_t audioDatas;
 
 unsigned long lastLcdDisplay;
 unsigned long lastLargeLcdDisplay;
+unsigned long lastAtollIrecv;
 
 byte irrecvPrevCommand  = 255; // Commande (IR) précédente inexistante (1ère réception sera  donc différente)
 byte irrecvPrevToggle   = 255; // Bit toggle (IR) précédent inexistant (1ère réception sera  donc différente)
@@ -134,19 +135,83 @@ cmd_t getCommandFromIr(byte ir_command) {
 
 void manageIr() {
 	unsigned char ir_toggle;
-	unsigned char ir_command;
+	unsigned char ir_command = IRECV_UNDEF;
 
-	//DEBUG_PRINT(results.address);
-	//DEBUG_PRINT(results.decode_type);  // UNKNOWN, NEC, SONY, RC5, ...
-	//DEBUG_PRINT_HEX(results.value);
-	//DEBUG_PRINT(results.bits);         // Number of bits in decoded value*/
+	DEBUG_PRINT(results.address);      // Unused by RC6 but used by PANASONIC
+	DEBUG_PRINT(results.decode_type);  // UNKNOWN, NEC, SONY, RC5, ...
+	DEBUG_PRINT_HEX(results.value);
+	DEBUG_PRINT(results.bits);         // Number of bits in decoded value*/
+	DEBUG_PRINT("");
 
-	if (results.address == IRECV_ADDR && results.decode_type == RC6 /* 2 */ && results.bits == 20) {
+	if (results.decode_type == RC6 /* 2 */ && results.bits == IRECV_BITS_NUMBER) {
 		ir_toggle = bitRead(results.value, IRECV_TOGGLE_NUM_BIT);
 		ir_command = results.value;
+	} else if ((results.decode_type == UNKNOWN || results.decode_type == PANASONIC) && \
+		      ((results.address == IRECV_ATOLL1_ADDR && results.bits == IRECV_ATOLL1_BITS_NUMBER) || \
+			  (results.address == IRECV_ATOLL2_ADDR && results.bits == IRECV_ATOLL2_BITS_NUMBER))) {
+		switch(results.value) {
+			case IRECV_ATOLL1_PWR:
+			case IRECV_ATOLL2_PWR:
+				ir_command = IRECV_PWR;
+				if (irrecvPrevCommand != IRECV_PWR || (irrecvPrevCommand == IRECV_PWR && millis() - lastAtollIrecv >= ATOLL_IRECV_TOGGLE_PWR_TIMEOUT)) {
+					lastAtollIrecv = millis();
+					ir_toggle = ~irrecvPrevToggle;
+				} else {
+					ir_toggle = irrecvPrevToggle;
+				}
+				break;
+			case IRECV_ATOLL1_MUTE:
+			case IRECV_ATOLL2_MUTE:
+				ir_command = IRECV_MUTE;
+				if (irrecvPrevCommand != IRECV_MUTE || (irrecvPrevCommand == IRECV_MUTE && millis() - lastAtollIrecv >= ATOLL_IRECV_TOGGLE_MUT_TIMEOUT)) {
+					lastAtollIrecv = millis();
+					ir_toggle = ~irrecvPrevToggle;
+				} else {
+					ir_toggle = irrecvPrevToggle;
+				}
+				break;
+			case IRECV_ATOLL1_VOL_P:
+			case IRECV_ATOLL2_VOL_P:
+				ir_command = IRECV_VOL_P;
+				break;
+			case IRECV_ATOLL1_VOL_M:
+			case IRECV_ATOLL2_VOL_M:
+				ir_command = IRECV_VOL_M;
+				break;
+			case IRECV_ATOLL1_CD:
+			case IRECV_ATOLL2_CD:
+				ir_command = IRECV_1;
+				break;
+			case IRECV_ATOLL1_DVD:
+			case IRECV_ATOLL2_DVD:
+				ir_command = IRECV_2;
+				break;
+			case IRECV_ATOLL1_TUNER:
+			case IRECV_ATOLL2_TUNER:
+				ir_command = IRECV_3;
+				break;
+			case IRECV_ATOLL1_TAPE:
+			case IRECV_ATOLL2_TAPE:
+				ir_command = IRECV_4;
+				break;
+			case IRECV_ATOLL1_AUX:
+			case IRECV_ATOLL2_AUX:
+				ir_command = IRECV_5;
+				break;
+			case IRECV_ATOLL1_BY_PASS:
+			case IRECV_ATOLL2_BY_PASS:
+				ir_command = IRECV_6;
+				break;
+			default:
+				break;
+		}
+	} else {
+		results.address = 0;
+		DEBUG_PRINT("toto");
+	}
 
+	if (ir_command != IRECV_UNDEF) {
 		//DEBUG_PRINT(ir_toggle);
-
 		if (ir_command == IRECV_PWR) {
 			if (irrecvPrevCommand == IRECV_PWR) {
 				if (ir_toggle != irrecvPrevToggle) {
@@ -301,21 +366,19 @@ state_t getPower() {
 
 void setPowerOn() {
 	pwrState = ON;
-	digitalWrite(PREAMPLIFIER_K_PIN, HIGH); // Step01 : switching on the pre-amplifier (all the supply voltage)
-	delay(4);
+	restoreAudioDatas();                    // Step01 : get previous state (before switching off)
+	digitalWrite(PREAMPLIFIER_K_PIN, HIGH); // Step02 : switching on the pre-amplifier (all the supply voltage)
+	delay(6);
 	initI2c();
-	delay(2);
-	restoreAudioDatas();                    // Step02 : get previous state (before switching off)
-	setSource(getSource(), true);           // Step03 : set source channel
-#ifdef DS1882
-	initConfRegister();
-#endif
-	setVolume();                            // Step04 : set volume + balance
-	digitalWrite(AMPLIFIER_K_PIN, HIGH);    // Step05 : switching on the amplifier
-	lcdInit();                              // Step06 : initialize lcd device
-	lcdOn();                                // Step07 : display standard informations
-	digitalWrite(NEOPIXEL_GND_PIN, HIGH);   // Step08 : connect LED K to GND
-	neopInit();                             // Step09 : switch on the neopixel led
+	lcdInit();                              // Step03 : initialize lcd device / display basics informations
+	setSource(getSource(), true);           // Step04 : set source channel
+	#ifdef DS1882
+		initConfRegister();
+	#endif
+	setVolume();                            // Step05 : set volume + balance
+	digitalWrite(AMPLIFIER_K_PIN, HIGH);    // Step06 : switching on the amplifier
+	digitalWrite(NEOPIXEL_GND_PIN, HIGH);   // Step07 : connect LED K to GND
+	neopInit();                             // Step08 : switch on the neopixel led
 	neopSetColor(audioDatas.neopxStatus);
 }
 

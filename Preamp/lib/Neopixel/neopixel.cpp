@@ -90,11 +90,7 @@ long increaseColor(long color, basecolor_t rgb) {
 byte increaseBaseColor(byte color) {
 	// 0x00, 0x10, ..., 0xD0, 0xE0, 0xF0, 0xFF
 	byte c = color;
-	/*if (c < 0xFF) {
-		c++;
-	} else {
-		c = 0;
-	}*/
+
 	if (c == 0xFF) {
 		c = 0;
 	} else if (c <= 0xE0) {

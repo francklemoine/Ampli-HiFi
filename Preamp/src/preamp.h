@@ -75,8 +75,6 @@ typedef struct myAudioDatas {
 	byte balance;
 	byte source; // S1(MSB), S2, S3, S4, S5, S6, S7, HP(LSB)
 	byte volumeMaxStart;
-	//byte volumeStepDefault;
-	//byte balanceStepDefault;
 
 	byte neopxBrightness;
 	color_t neopxStatus;
@@ -92,9 +90,11 @@ typedef struct myAudioDatas {
 
 #define ARRAY_SIZE(array)   (sizeof(array) / sizeof(*array))
 
-const unsigned long NO_ACTIVITY_TIMEOUT       = 60000; // milliseconds
-const unsigned long LCD_DISPLAY_TIMEOUT       = 60000; // milliseconds
-const unsigned long LARGE_LCD_DISPLAY_TIMEOUT = 5000;  // milliseconds
+const unsigned long NO_ACTIVITY_TIMEOUT        = 60000;    // milliseconds
+const unsigned long LCD_DISPLAY_TIMEOUT        = 60000;    // milliseconds
+const unsigned long LARGE_LCD_DISPLAY_TIMEOUT  = 5000;     // milliseconds
+const unsigned long ATOLL_IRECV_TOGGLE_PWR_TIMEOUT = 2500; // milliseconds
+const unsigned long ATOLL_IRECV_TOGGLE_MUT_TIMEOUT = 500;  // milliseconds
 
 typedef enum state {
 	OFF,
@@ -111,14 +111,6 @@ const byte POT_CE_PIN            = 5;  // Connected to CE of DS18xx Numeric Pote
 #endif
 
 const byte VOL_ADDR_W            = B00101000; //B01010000 - need to shift right (cf. Wire Library)
-
-const byte VOL_STEP_DEFAULT_MIN  = 1;
-const byte VOL_STEP_DEFAULT      = 1;
-const byte VOL_STEP_DEFAULT_MAX  = 4;
-
-const byte BAL_STEP_DEFAULT_MIN  = 1;
-const byte BAL_STEP_DEFAULT      = 1;
-const byte BAL_STEP_DEFAULT_MAX  = 10;
 
 #ifdef DS1882
 	const byte VOL_TAP_POS       = 63; // 63 (90dB) <= volume <= 0 (OdB)
@@ -150,7 +142,7 @@ typedef enum sources {
 
 // Remote Control
 const byte IRECV_PIN               = 8;  // Connected to IR Receiver out pin (Atmega Pin12 = PB0)
-const byte IRECV_ADDR              = 0;
+const byte IRECV_BITS_NUMBER       = 20;
 const byte IRECV_TOGGLE_NUM_BIT    = 16;
 const byte IRECV_PWR               = 0x0C;
 const byte IRECV_MUTE              = 0x0D;
@@ -172,6 +164,34 @@ const byte IRECV_MENU_LEFT         = 0x5A;
 const byte IRECV_MENU_RIGHT        = 0x5B;
 const byte IRECV_MENU_OK           = 0x5C;
 const byte IRECV_MENU_EXIT         = 0x31;
+const byte IRECV_UNDEF             = 0xFF;
+
+// Remote Control (Specific ATOLL CD80se2)
+const int  IRECV_ATOLL1_ADDR        = 16388;
+const byte IRECV_ATOLL1_BITS_NUMBER = 48;
+const long IRECV_ATOLL1_PWR         = 0x6020004;
+const long IRECV_ATOLL1_MUTE        = 0x6028084;
+const long IRECV_ATOLL1_VOL_P       = 0x602888C;
+const long IRECV_ATOLL1_VOL_M       = 0x602080C;
+const long IRECV_ATOLL1_CD          = 0x602D0D4;
+const long IRECV_ATOLL1_TUNER       = 0x6023034;
+const long IRECV_ATOLL1_DVD         = 0x6022024;
+const long IRECV_ATOLL1_TAPE        = 0x602B0B4;
+const long IRECV_ATOLL1_AUX         = 0x6024044;
+const long IRECV_ATOLL1_BY_PASS     = 0x6026064;
+
+const int  IRECV_ATOLL2_ADDR        = 0;
+const byte IRECV_ATOLL2_BITS_NUMBER = 32;
+const long IRECV_ATOLL2_PWR         = 0x488D80BA;
+const long IRECV_ATOLL2_MUTE        = 0x972B6AA2;
+const long IRECV_ATOLL2_VOL_P       = 0x74E76D90;
+const long IRECV_ATOLL2_VOL_M       = 0x7C494528;
+const long IRECV_ATOLL2_CD          = 0x6518672A;
+const long IRECV_ATOLL2_TUNER       = 0x886B19CA;
+const long IRECV_ATOLL2_DVD         = 0xCDB31C22;
+const long IRECV_ATOLL2_TAPE        = 0xEBC0BF72;
+const long IRECV_ATOLL2_AUX         = 0xA6499362;
+const long IRECV_ATOLL2_BY_PASS     = 0xD5F2AD4A;
 
 // Listes des commandes
 typedef enum commands {
@@ -232,7 +252,7 @@ const byte PREAMPLIFIER_K_PIN      = 2;   // ATMEGA328-pin32 (PD2, PCINT18)
 const byte NEOPIXEL_PIN            = 10;  // ATMEGA328-pin14 (PB2, PCINT2)
 const byte NEOPIXEL_GND_PIN        = 3;   // ATMEGA328-pin1  (PD3, PCINT19)
 const byte NEOPIXEL_NUM            = 1;   // only one led
-const byte NEOPIXEL_BRIGHTNESS     = 20;
+const byte NEOPIXEL_BRIGHTNESS     = 10;
 const byte NEOPIXEL_BRIGHTNESS_MAX = 250;
 const byte NEOPIXEL_BRIGHTNESS_MIN = 10;
 const byte NEOPIXEL_BRIGHTNESS_TAP = 10;

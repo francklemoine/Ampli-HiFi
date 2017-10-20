@@ -27,8 +27,6 @@ void menuLedStatusDependingOnContext(MenuSystem ms);
 void displayMenu();
 void displayMenuData(char* myData);
 void onMenuSetVolMaxStart(MenuItem* pMenuItem);
-//void onMenuSetVolIncr(MenuItem* pMenuItem);
-//void onMenuSetBalIncr(MenuItem* pMenuItem);
 void onMenuSetLedBrightness(MenuItem* pMenuItem);
 void onMenuSetLedColorOn(MenuItem* pMenuItem);
 void onMenuSetLedColorOff(MenuItem* pMenuItem);

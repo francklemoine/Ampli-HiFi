@@ -13,14 +13,6 @@ void restoreAudioDatas() {
 	if (audioDatas.volumeMaxStart > VOL_MAX) // Locations that have never been written to have the value of 255
 		audioDatas.volumeMaxStart = VOL_TAP_POS - VOL_TAP_STARTUP;
 
-	// volume (incrément par défaut)
-	/*if (audioDatas.volumeStepDefault >= VOL_STEP_DEFAULT_MAX) // Locations that have never been written to have the value of 255
-		audioDatas.volumeStepDefault = VOL_STEP_DEFAULT;*/
-
-	// balance (incrément par défaut)
-	/*if (audioDatas.balanceStepDefault >= BAL_STEP_DEFAULT_MAX) // Locations that have never been written to have the value of 255
-		audioDatas.balanceStepDefault = BAL_STEP_DEFAULT;*/
-
 	// volume
 	if (audioDatas.volume > VOL_MAX) // Locations that have never been written to have the value of 255
 		audioDatas.volume = 0;

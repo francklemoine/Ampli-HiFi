@@ -14,10 +14,9 @@ byte incVolume() {
 		audioDatas.volume = VOL_MAX;
 	}
 
-	if (vol != audioDatas.volume) {
-		setVolume();
-		displayVolume(LARGE);
-	}
+	if (vol != audioDatas.volume) setVolume();
+
+	displayVolume(LARGE);
 
 	return audioDatas.volume;
 }
@@ -31,10 +30,9 @@ byte decVolume() {
 		audioDatas.volume = 0;
 	}
 
-	if (vol != audioDatas.volume) {
-		setVolume();
-		displayVolume(LARGE);
-	}
+	if (vol != audioDatas.volume) setVolume();
+
+	displayVolume(LARGE);
 
 	return audioDatas.volume;
 }
@@ -180,10 +178,9 @@ byte turnBalanceRight() {
 		audioDatas.balance++;
 	}
 
-	if (bal != audioDatas.balance) {
-		setVolume();
-		displayBalance(LARGE);
-	}
+	if (bal != audioDatas.balance) setVolume();
+
+	displayBalance(LARGE);
 
 	return audioDatas.balance;
 }
@@ -195,10 +192,9 @@ byte turnBalanceLeft() {
 		audioDatas.balance--;
 	}
 
-	if (bal != audioDatas.balance) {
-		setVolume();
-		displayBalance(LARGE);
-	}
+	if (bal != audioDatas.balance) setVolume();
+
+	displayBalance(LARGE);
 
 	return audioDatas.balance;
 }

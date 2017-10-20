@@ -19,9 +19,5 @@ byte turnBalanceRight();
 byte turnBalanceLeft();
 byte getVolumeMaxStart();
 byte setVolumeMaxStart(byte newvalue);
-//byte getVolumeStepDefault();
-//byte setVolumeStepDefault(byte newvalue);
-//byte getBalanceStepDefault();
-//byte setBalanceStepDefault(byte newvalue);
 
 #endif
