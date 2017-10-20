@@ -1162,4 +1162,6 @@ Wire Wire Line
 	4100 900  4150 900 
 Text Notes 4850 800  0    60   ~ 0
 Futur use with OTA programming
+Text Notes 8600 6400 0    60   ~ 0
+20171001 : TSOP38238 replaced by TSOP34436\n=> RC6 + REC-80 (panasonic) protocols
 $EndSCHEMATC
