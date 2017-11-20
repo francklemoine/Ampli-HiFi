@@ -103,20 +103,28 @@ state_t getMute() {
 }
 
 void setMuteOn() {
+	setMuteOn(true);
+}
+
+void setMuteOn(boolean displayLarge) {
 	if (audioDatas.volume > 0) {
 		audioDatas.mute = audioDatas.volume;
 		audioDatas.volume = 0;
 		setVolume();
-		displayVolume(LARGE);
+		if (displayLarge) displayVolume(LARGE);
 	}
 }
 
 void setMuteOff() {
+	setMuteOff(true);
+}
+
+void setMuteOff(boolean displayLarge) {
 	if (audioDatas.mute > 0) {
 		audioDatas.volume = audioDatas.mute;
 		audioDatas.mute = 0;
 		setVolume();
-		displayVolume(LARGE);
+		if (displayLarge) displayVolume(LARGE);
 	}
 }
 

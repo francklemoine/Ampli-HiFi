@@ -2,6 +2,7 @@
 #include "../../src/preamp.h"
 #include "lcd.h"
 #include "neopixel.h"
+#include "sources.h"
 #include <EEPROM.h>  // Librairie pour le stockage de données en mémoire Eeprom interne
 
 extern audioDatas_t audioDatas;
@@ -23,8 +24,10 @@ void restoreAudioDatas() {
 	if (audioDatas.balance > BAL_TAP_MAX) // Locations that have never been written to have the value of 255
 		audioDatas.balance = BAL_TAP_MIDDLE;
 
-	// source (ne pas actionner le relais HP-Phone)
-	audioDatas.source &= B11111110;
+	// source
+	if (getSource() == S_UNDEF) { // Locations that have never been written to have the value of 255
+		audioDatas.source = B10000000; // S1
+	}
 
 	audioDatas.mute = 0;
 
@@ -40,8 +43,8 @@ void restoreAudioDatas() {
 
 	audioDatas.neopxStatus = COLOR_ON;
 
-	if (audioDatas.lcdBackLightSaver > 0) { // Locations that have never been written to have the value of 255
-		audioDatas.lcdBackLightSaver = 1;
+	if (audioDatas.lcdBackLightSaver > 1) { // Locations that have never been written to have the value of 255
+		audioDatas.lcdBackLightSaver = 0;
 	}
 }
 

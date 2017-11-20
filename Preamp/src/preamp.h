@@ -4,13 +4,19 @@
 #include "Arduino.h"
 
 //#define MYDEBUG                  //enable/disable serial debug output
+
+#define PCF8574                  //LCD with I2C PCF8574(T) backpack
+//#define PCF8574A                 //LCD with I2C PCF8574A(T) backpack
+
 #define DS1882                   //use DS1808 or DS1882 digital potentiometer
 //#define USE_POTENTIOMETER_CE_PIN //use Chip Enable pin
+
 
 // used to disable the internal pullups
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
+
 
 #ifdef MYDEBUG
 	#define DEBUG_SERIAL_INIT() Serial.begin(9600);
@@ -39,6 +45,7 @@
 	#define DEBUG_PRINT(x)
 	#define DEBUG_PRINT_HEX(x)
 #endif
+
 
 #define B_COLOR(w) ((uint8_t) ((w) & 0xff))
 #define G_COLOR(w) ((uint8_t) ((w) >> 8))
@@ -73,7 +80,7 @@ typedef struct myAudioDatas {
 	byte volume;
 	byte mute;
 	byte balance;
-	byte source; // S1(MSB), S2, S3, S4, S5, S6, S7, HP(LSB)
+	byte source; // S1(MSB), S2, S3, S4, S5, BP, UNUSED1, UNUSED2(LSB)
 	byte volumeMaxStart;
 
 	byte neopxBrightness;
@@ -106,11 +113,14 @@ const int  LATCH_595_PIN         = A1; // Connected to ST_CP of 74HC595  -  ATME
 const int  CLOCK_595_PIN         = A2; // Connected to SH_CP of 74HC595  -  ATMEGA328-pin25 (PC2, PCINT10)
 const int  DATAS_595_PIN         = A0; // Connected to DS of 74HC595     -  ATMEGA328-pin23 (PC0, PCINT8)
 
+
 #ifdef USE_POTENTIOMETER_CE_PIN
-const byte POT_CE_PIN            = 5;  // Connected to CE of DS18xx Numeric Potentiometer  -  ATMEGA328-pin9 (PD5, PCINT21)
+	const byte POT_CE_PIN        = 5;  // Connected to CE of DS18xx Numeric Potentiometer  -  ATMEGA328-pin9 (PD5, PCINT21)
 #endif
 
+
 const byte VOL_ADDR_W            = B00101000; //B01010000 - need to shift right (cf. Wire Library)
+
 
 #ifdef DS1882
 	const byte VOL_TAP_POS       = 63; // 63 (90dB) <= volume <= 0 (OdB)
@@ -128,16 +138,23 @@ const byte VOL_ADDR_W            = B00101000; //B01010000 - need to shift right 
 	const byte vol2db[34] = {90, 60, 57, 54, 51, 48, 45, 42, 39, 36, 34, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
 #endif
 
+
 const byte VOL_ATTN_MAX_DB       = 90; // attenuation max = 90db
 
 const byte BAL_TAP_MIDDLE        = 20; // potentiometer middle tap value
 const byte BAL_TAP_MAX           = 40;
 
-const int LCD_I2C_ADDR  = 0x3F;
+
+#ifdef PCF8574
+	const int LCD_I2C_ADDR       = 0x27;
+#else // PCF8574A
+	const int LCD_I2C_ADDR       = 0x3F;
+#endif
+
 
 // Listes des commandes
 typedef enum sources {
-	S_UNDEF, S1, S2, S3, S4, S5, S6, S7, HP
+	S_UNDEF, S1, S2, S3, S4, S5, BP
 } sources_t;
 
 // Remote Control
@@ -155,8 +172,7 @@ const byte IRECV_2                 = 2;
 const byte IRECV_3                 = 3;
 const byte IRECV_4                 = 4;
 const byte IRECV_5                 = 5;
-const byte IRECV_6                 = 6;
-const byte IRECV_7                 = 7;
+const byte IRECV_BP                = 6;
 const byte IRECV_MENU              = 0x54;
 const byte IRECV_MENU_UP           = 0x58;
 const byte IRECV_MENU_DOWN         = 0x59;
@@ -208,8 +224,7 @@ typedef enum commands {
 	C_SRC_3,		// Source 3
 	C_SRC_4,		// Source 4
 	C_SRC_5,		// Source 5
-	C_SRC_6,		// Source 6
-	C_SRC_7,		// Source 7
+	C_SRC_BP,		// By-Pass
 	C_MENU,			// Accès au menu
 	C_MENU_UP,		// Accès au menu
 	C_MENU_DOWN,	// Accès au menu
@@ -234,8 +249,7 @@ const byte IRECV_C[C_COUNT] = {
 	[C_SRC_3]      = IRECV_3,
 	[C_SRC_4]      = IRECV_4,
 	[C_SRC_5]      = IRECV_5,
-	[C_SRC_6]      = IRECV_6,
-	[C_SRC_7]      = IRECV_7,
+	[C_SRC_BP]     = IRECV_BP,
 	[C_MENU]       = IRECV_MENU,
 	[C_MENU_UP]    = IRECV_MENU_UP,
 	[C_MENU_DOWN]  = IRECV_MENU_DOWN,

@@ -20,8 +20,7 @@ const char* LCD_AFF_SRC[8] = {
 	[S3]      = "Tuner ",
 	[S4]      = "Tape  ",
 	[S5]      = "Aux   ",
-	[S6]      = "ByPass",
-	[S7]      = "Aux2  "
+	[BP]      = "ByPass"
 };
 
 // Define the bit patters for each of our custom chars. These
@@ -68,13 +67,13 @@ const char *MI_COLOR_ON_R    = "Col.On R";
 const char *MI_COLOR_ON_G    = "Col.On G";
 const char *MI_COLOR_ON_B    = "Col.On B";
 
-const char *MI_COLOR_OFF_R    = "Col.Off R";
-const char *MI_COLOR_OFF_G    = "Col.Off G";
-const char *MI_COLOR_OFF_B    = "Col.Off B";
+const char *MI_COLOR_OFF_R   = "Col.Off R";
+const char *MI_COLOR_OFF_G   = "Col.Off G";
+const char *MI_COLOR_OFF_B   = "Col.Off B";
 
-const char *MI_COLOR_BLK_R    = "Col.Blk R";
-const char *MI_COLOR_BLK_G    = "Col.Blk G";
-const char *MI_COLOR_BLK_B    = "Col.Blk B";
+const char *MI_COLOR_BLK_R   = "Col.Blk R";
+const char *MI_COLOR_BLK_G   = "Col.Blk G";
+const char *MI_COLOR_BLK_B   = "Col.Blk B";
 
 const char *MI_COLOR_RAZ     = "Col.RAZ";
 
@@ -158,7 +157,7 @@ void displayVolume(dspfmt_t format) {
 	switch(format) {
 		case BASIC:
 			lcd.setCursor(0, 0);        // digit-1, line-1
-			lcd.print("vol: ");
+			lcd.print("vol  ");
 			lcd.setCursor(5, 0);        // digit-6, line-1
 			lcd.print("  ");
 			lcd.setCursor(5, 0);        // digit-6, line-1
@@ -179,7 +178,7 @@ void displayBalance(dspfmt_t format) {
 	switch(format) {
 		case BASIC:
 			lcd.setCursor(0, 1);        // digit-1, line-2
-			lcd.print("bal: ");
+			lcd.print("bal  ");
 			lcd.setCursor(5, 1);        // digit-6, line-2
 			lcd.print("      ");
 			lcd.setCursor(5, 1);        // digit-6, line-2

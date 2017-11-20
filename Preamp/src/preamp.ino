@@ -200,14 +200,13 @@ void manageIr() {
 				break;
 			case IRECV_ATOLL1_BY_PASS:
 			case IRECV_ATOLL2_BY_PASS:
-				ir_command = IRECV_6;
+				ir_command = IRECV_BP;
 				break;
 			default:
 				break;
 		}
 	} else {
 		results.address = 0;
-		DEBUG_PRINT("toto");
 	}
 
 	if (ir_command != IRECV_UNDEF) {
@@ -288,12 +287,6 @@ void manageAudio(cmd_t command) {
 		}
 	} else {
 		switch(command) {
-			case C_MUTE_ON:
-				setMuteOn();
-				break;
-			case C_MUTE_OFF:
-				setMuteOff();
-				break;
 			case C_SRC_1:
 				setSource(S1);
 				break;
@@ -309,32 +302,41 @@ void manageAudio(cmd_t command) {
 			case C_SRC_5:
 				setSource(S5);
 				break;
-			case C_SRC_6:
-				setSource(S6);
-				break;
-			case C_SRC_7:
-				setSource(S7);
-				break;
-			case C_VOL_P:
-				incVolume();
-				break;
-			case C_VOL_M:
-				decVolume();
-				break;
-			case C_BAL_R:
-				turnBalanceRight();
-				break;
-			case C_BAL_L:
-				turnBalanceLeft();
-				break;
-			case C_MENU:
-				menuHandler(command);
-				break;
-			case C_MENU_EXIT:
-				if (getLcdState() == LARGE) displayBasicInfos();
+			case C_SRC_BP:
+				setSource(BP);
 				break;
 			default:
 				break;
+		}
+		if (getSource() != BP) {
+			switch(command) {
+				case C_MUTE_ON:
+					setMuteOn();
+					break;
+				case C_MUTE_OFF:
+					setMuteOff();
+					break;
+				case C_VOL_P:
+					incVolume();
+					break;
+				case C_VOL_M:
+					decVolume();
+					break;
+				case C_BAL_R:
+					turnBalanceRight();
+					break;
+				case C_BAL_L:
+					turnBalanceLeft();
+					break;
+				case C_MENU:
+					menuHandler(command);
+					break;
+				case C_MENU_EXIT:
+					if (getLcdState() == LARGE) displayBasicInfos();
+					break;
+				default:
+					break;
+			}
 		}
 	}
 }
@@ -384,12 +386,13 @@ void setPowerOn() {
 
 void setPowerOff() {
 	pwrState = OFF;
-	digitalWrite(AMPLIFIER_K_PIN, LOW);     // Step01 : switching off the amplifier
-	neopSetColor(COLOR_OFF);                // Step02 : switch color off the neopixel led
-	lcdOff();                               // Step03 : switching off the display
-	saveAudioDatas();                       // Step04 : store current pre-amplifier states
-	digitalWrite(PREAMPLIFIER_K_PIN, LOW);  // Step05 : switching off the pre-amplifier (all the supply voltage)
-	digitalWrite(LATCH_595_PIN, LOW);       // Step06 : to avoid having a resident voltage influencing the +5V
+	saveAudioDatas();                       // Step01 : store current pre-amplifier states
+	setMuteOn(false);                       // Step02 : mute
+	digitalWrite(AMPLIFIER_K_PIN, LOW);     // Step03 : switching off the amplifier
+	neopSetColor(COLOR_OFF);                // Step04 : switch color off the neopixel led
+	lcdOff();                               // Step05 : switching off the display
+	digitalWrite(PREAMPLIFIER_K_PIN, LOW);  // Step06 : switching off the pre-amplifier (all the supply voltage)
+	digitalWrite(LATCH_595_PIN, LOW);       // Step07 : to avoid having a resident voltage influencing the +5V
 	digitalWrite(CLOCK_595_PIN, LOW);       //           (remains a resident of light in the led)
 	digitalWrite(DATAS_595_PIN, LOW);
 	disableInternalPullupsOnSDAandSCL();

@@ -1,11 +1,13 @@
 #include "sources.h"
 #include "../../src/preamp.h"
+#include "audio.h"
 #include "lcd.h"
 
 extern audioDatas_t audioDatas;
 
 void clearSource() {
-	byte source = audioDatas.source & B00000001;
+	//byte source = audioDatas.source & B00000001;
+	byte source = 0;
 	digitalWrite(LATCH_595_PIN, LOW);
 	shiftOut(DATAS_595_PIN, CLOCK_595_PIN, LSBFIRST, source);
 	digitalWrite(LATCH_595_PIN, HIGH);
@@ -17,10 +19,12 @@ void setSource(sources_t sx) {
 }
 
 void setSource(sources_t sx, boolean force) {
-	if (sx != getSource() || force) {
+	sources_t prevSource = getSource();
+	if (sx != prevSource || force) {
 		byte source;
+		setMuteOn(false);
 		clearSource();
-		delay(5);
+		delay(4);
 		if (sx == S1) {
 			source = audioDatas.source | B10000000;
 		} else if (sx == S2) {
@@ -31,17 +35,22 @@ void setSource(sources_t sx, boolean force) {
 			source = audioDatas.source | B00010000;
 		} else if (sx == S5) {
 			source = audioDatas.source | B00001000;
-		} else if (sx == S6) {
+		} else if (sx == BP) {
 			source = audioDatas.source | B00000100;
-		} else if (sx == S7) {
-			source = audioDatas.source | B00000010;
 		}
 		digitalWrite(LATCH_595_PIN, LOW);
 		shiftOut(DATAS_595_PIN, CLOCK_595_PIN, LSBFIRST, source);
 		digitalWrite(LATCH_595_PIN, HIGH);
 		audioDatas.source = source;
-		displaySource();
+		if (sx == BP) {
+			// By-Pass => volume stay with value 0
+			displayBasicInfos(); // update volume (zero)
+		} else {
+			setMuteOff(false);
+			if (prevSource == BP) displayBasicInfos(); //update volume
+		}
 	}
+	displaySource();
 }
 
 sources_t getSource() {
@@ -50,7 +59,6 @@ sources_t getSource() {
 	if (bitRead(audioDatas.source, 5)) return S3;
 	if (bitRead(audioDatas.source, 4)) return S4;
 	if (bitRead(audioDatas.source, 3)) return S5;
-	if (bitRead(audioDatas.source, 2)) return S6;
-	if (bitRead(audioDatas.source, 1)) return S7;
+	if (bitRead(audioDatas.source, 2)) return BP;
 	return S_UNDEF;
 }
