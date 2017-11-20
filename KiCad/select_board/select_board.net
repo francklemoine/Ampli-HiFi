@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /u01/datas/perso/kicad/Ampli-HiFi/KiCad/select_board/select_board.sch)
-    (date "mer. 18 oct. 2017 19:50:02 CEST")
+    (date "mer. 15 nov. 2017 11:42:02 CET")
     (tool "Eeschema 4.0.4+e1-6308~48~ubuntu15.10.1-stable")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -359,10 +359,10 @@
         (pin (num 1) (name T) (type passive))
         (pin (num 2) (name S) (type passive)))))
   (libraries
-    (library (logical conn)
-      (uri /u01/datas/perso/kicad/library/kicad-library/library/conn.lib))
     (library (logical device)
       (uri /u01/datas/perso/kicad/library/kicad-library/library/device.lib))
+    (library (logical conn)
+      (uri /u01/datas/perso/kicad/library/kicad-library/library/conn.lib))
     (library (logical flem)
       (uri /u01/datas/perso/kicad/library/flem/KiCad/library/flem.lib)))
   (nets

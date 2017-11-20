@@ -948,7 +948,7 @@ Wire Wire Line
 Wire Wire Line
 	3400 2450 3400 2500
 Text Label 8250 1800 0    60   ~ 0
-hp
+s8
 Wire Wire Line
 	8200 1800 8250 1800
 Text Label 8250 1700 0    60   ~ 0
@@ -980,7 +980,7 @@ Wire Wire Line
 Wire Wire Line
 	8200 1100 8250 1100
 Text Label 8850 1200 2    60   ~ 0
-hp
+s8
 Text Label 8850 1300 2    60   ~ 0
 s7
 Text Label 8850 1400 2    60   ~ 0
@@ -1022,11 +1022,11 @@ S4
 Text Notes 10500 1500 0    60   Italic 0
 S5
 Text Notes 10500 1400 0    60   Italic 0
-S6
+S6 (By-Pass)
 Text Notes 10500 1300 0    60   Italic 0
-S7
+FU1
 Text Notes 10500 1200 0    60   Italic 0
-HP-Phone
+FU2
 Wire Wire Line
 	5750 2400 5950 2400
 NoConn ~ 5750 4200
