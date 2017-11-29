@@ -3,7 +3,6 @@
 
 #include "Arduino.h"
 #include "../../src/preamp.h"
-#include "lcd.h"
 
 void clearSource();
 void setSource(sources_t sx);

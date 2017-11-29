@@ -3,7 +3,9 @@
 
 #include "Arduino.h"
 #include "../../src/preamp.h"
-#include <MenuSystem.h>
+
+class MenuItem;
+class MenuSystem;
 
 void lcdInit();
 void lcdOn();
